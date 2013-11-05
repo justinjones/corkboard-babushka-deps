@@ -128,7 +128,7 @@ end
 
 dep 'nginx.src', :nginx_prefix, :version do
   nginx_prefix.default!("/opt/nginx")
-  version.default!('1.2.4')
+  version.default!('1.4.3')
 
   requires 'pcre.lib', 'openssl.lib', 'zlib.lib'
 
