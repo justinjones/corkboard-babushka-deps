@@ -1,3 +1,11 @@
+dep '7zip.bin' do
+  installs {
+    via :apt, 'p7zip-full'
+    via :brew, 'p7zip'
+  }
+  provides '7z', '7za'
+end
+
 dep 'aptitude.bin'
 
 dep 'aspell.bin'
