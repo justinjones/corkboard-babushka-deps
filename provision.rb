@@ -25,6 +25,15 @@ dep 'public key in place', :host, :keys do
   }
 end
 
+dep 'dir in path', :host, :path do
+  met? {
+    ssh("root@#{host}").shell("env | grep $PATH").val_for('PATH').split(':').include?(path)
+  }
+  meet {
+    ssh("root@#{host}").shell("echo 'export PATH=#{path}:$PATH' >> ~/.profile")
+  }
+end
+
 dep 'babushka bootstrapped', :host do
   met? {
     raw_shell("ssh root@#{host} 'babushka --version'").stdout[/[\d\.]{5,} \([0-9a-f]{7,}\)/].tap {|result|
@@ -80,6 +89,7 @@ dep 'host provisioned', :host, :host_name, :ref, :env, :app_name, :app_user, :do
   }
 
   requires_when_unmet 'public key in place'.with(host, keys)
+  requires_when_unmet 'dir in path'.with(host, '/usr/local/bin')
   requires_when_unmet 'babushka bootstrapped'.with(host)
   requires_when_unmet 'git remote'.with(env, app_user, host)
 
