@@ -8,6 +8,7 @@ dep 'ruby.src', :version, :patchlevel do
   version.default!('2.0.0')
   patchlevel.default!('p247')
   requires_when_unmet [
+    'ruby.lib', # We need an existing ruby with mkmf to build a new ruby.
     'curl.lib',
     'openssl.lib',
     'readline.lib',

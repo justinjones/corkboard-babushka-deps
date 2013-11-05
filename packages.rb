@@ -94,6 +94,12 @@ dep 'readline.lib' do
   }
 end
 
+dep 'ruby.lib' do
+  installs {
+    on :apt, 'ruby1.8-dev'
+  }
+end
+
 dep 'qt-dev.lib' do
   installs {
     on :apt, 'libqt4-dev', 'libqtwebkit-dev', 'qt4-qmake'
