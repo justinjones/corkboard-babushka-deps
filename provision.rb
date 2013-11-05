@@ -41,7 +41,7 @@ dep 'babushka bootstrapped', :host do
     }
   }
   meet {
-    shell %{ssh root@#{host} 'sh -'}, :input => shell('curl https://babushka.me/up'), :log => true
+    shell %{ssh root@#{host} 'sh -'}, :input => shell('curl https://babushka.me/up/master'), :log => true
   }
 end
 
