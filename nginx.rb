@@ -130,7 +130,7 @@ dep 'nginx.src', :nginx_prefix, :version do
   nginx_prefix.default!("/opt/nginx")
   version.default!('1.2.4')
 
-  requires 'pcre.lib', 'ssl.lib', 'zlib.lib'
+  requires 'pcre.lib', 'openssl.lib', 'zlib.lib'
 
   source "http://nginx.org/download/nginx-#{version}.tar.gz"
 

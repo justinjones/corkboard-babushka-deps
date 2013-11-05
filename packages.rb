@@ -114,10 +114,11 @@ dep 'sshd.bin' do
   }
 end
 
-dep 'ssl.lib' do
+dep 'openssl.lib' do
   installs {
     via :apt, 'libssl-dev'
     via :yum, 'openssl-devel'
+    otherwise 'openssl'
   }
 end
 
