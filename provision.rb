@@ -86,41 +86,6 @@ meta :remote do
   end
 end
 
-# This dep couples two concerns together (kernel & apt upgrade) and should be refactored.
-dep 'host updated', :host, :template => 'remote' do
-
-  def reboot_remote!
-    remote_shell('reboot')
-
-    log "Waiting for #{host} to go offline...", :newline => false
-    while shell?("ssh", '-o', 'ConnectTimeout=1', host_spec, 'true')
-      print '.'
-      sleep 5
-    end
-    puts " gone."
-
-    log "Waiting for #{host} to boot...", :newline => false
-    until shell?("ssh", '-o', 'ConnectTimeout=1', host_spec, 'true')
-      print '.'
-      sleep 5
-    end
-    puts " booted."
-  end
-
-  met? {
-    # Make sure we're running on the correct kernel (it should have been installed and booted
-    # by the above upgrade; this dep won't attempt an install).
-    remote_babushka 'corkboard:kernel running', :version => '3.2.0-43-generic' # linux-3.2.0-43.68, for the CVE-2013-2094 fix.
-  }
-
-  meet {
-    # First we need to configure apt. This involves a dist-upgrade, which should update the kernel.
-    remote_babushka 'corkboard:apt configured'
-    # The above update could have touched the kernel and/or glibc, so a reboot might be required.
-    reboot_remote!
-  }
-end
-
 # This is massive and needs a refactor, but it works for now.
 dep 'host provisioned', :host, :host_name, :ref, :env, :app_name, :app_user, :domain, :app_root, :keys, :check_path, :expected_content_path, :expected_content, :template => 'remote' do
 
@@ -204,14 +169,6 @@ dep 'host provisioned', :host, :host_name, :ref, :env, :app_name, :app_user, :do
 
     @run = true
   }
-end
-
-dep 'apt configured' do
-  requires [
-    'apt sources',
-    'apt packages removed'.with([/apache/i, /mysql/i, /php/i]),
-    'upgrade apt packages'
-  ]
 end
 
 dep 'system provisioned', :host_name, :env, :app_name, :app_user, :key do
