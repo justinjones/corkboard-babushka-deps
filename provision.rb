@@ -36,58 +36,8 @@ dep 'babushka bootstrapped', :host do
   }
 end
 
-meta :remote do
-  def as user, &block
-    previous_user, @user = @user, user
-    yield
-  ensure
-    @user = previous_user
-  end
-
-  def host_spec
-    "#{@user || 'root'}@#{host}"
-  end
-
-  def remote_shell *cmd
-    opening_message = [
-      host_spec.colorize("on grey"), # user@host spec
-      cmd.map {|i| i.sub(/^(.{50})(.{3}).*/m, '\1...') }.join(' ') # the command, with long args truncated
-    ].join(' $ ')
-    log opening_message, :closing_status => opening_message do
-      shell "ssh", "-A", host_spec, cmd.map{|i| "'#{i}'" }.join(' '), :log => true
-    end
-  end
-
-  def remote_babushka dep_spec, args = {}
-    remote_args = [
-      '--defaults',
-      ('--update' if Babushka::Base.task.opt(:update)),
-      ('--debug'  if Babushka::Base.task.opt(:debug)),
-      ('--colour' if $stdin.tty?),
-      '--show-args'
-    ].compact
-
-    remote_args.concat args.keys.map {|k| "#{k}=#{args[k]}" }
-
-    remote_shell(
-      'babushka',
-      dep_spec,
-      *remote_args
-    ).tap {|result|
-      unmeetable! "The remote babushka reported an error." unless result
-    }
-  end
-
-  def failable_remote_babushka dep_spec, args = {}
-    remote_babushka(dep_spec, args)
-  rescue Babushka::UnmeetableDep
-    log "That remote run was marked as failable; moving on."
-    false
-  end
-end
-
 # This is massive and needs a refactor, but it works for now.
-dep 'host provisioned', :host, :host_name, :ref, :env, :app_name, :app_user, :domain, :app_root, :keys, :check_path, :expected_content_path, :expected_content, :template => 'remote' do
+dep 'host provisioned', :host, :host_name, :ref, :env, :app_name, :app_user, :domain, :app_root, :keys, :check_path, :expected_content_path, :expected_content do
 
   # In production, default the domain to the app user (specified per-app).
   domain.default!(app_user) if env == 'production'
@@ -134,10 +84,14 @@ dep 'host provisioned', :host, :host_name, :ref, :env, :app_name, :app_user, :do
   requires_when_unmet 'git remote'.with(env, app_user, host)
 
   meet {
-    as('root') {
+    ssh("root@#{host}") {|remote|
       # First, UTF-8 everything. (A new shell is required to test this, hence 2 runs.)
-      failable_remote_babushka 'corkboard:set.locale', :locale_name => 'en_AU'
-      remote_babushka 'corkboard:set.locale', :locale_name => 'en_AU'
+      begin
+        remote.babushka 'corkboard:set.locale', :locale_name => 'en_AU'
+      rescue Babushka::UnmeetableDep => ex
+        log "Checking the locle on a fresh session."
+        remote.babushka 'corkboard:set.locale', :locale_name => 'en_AU'
+      end
 
       # Build ruby separately, because it changes the ruby binary for subsequent deps.
       remote_babushka 'corkboard:ruby.src', :version => '2.0.0', :patchlevel => 'p247'
