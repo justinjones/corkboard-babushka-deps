@@ -87,7 +87,9 @@ dep 'postgres config', :version do
     version.to_s.scan(/^\d\.\d/).first
   end
   def psql cmd
-    shell("psql postgres -t", :as => 'postgres', :input => cmd).strip
+    output = shell?("psql postgres -t", :as => 'postgres', :input => cmd)
+
+    (output || '').strip
   end
   def current_settings
     Hash[
