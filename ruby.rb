@@ -15,7 +15,7 @@ dep 'ruby.src', :version, :patchlevel do
     'zlib.lib'
   ]
   source "ftp://ftp.ruby-lang.org/pub/ruby/#{version_group}/ruby-#{version}-#{patchlevel}.tar.gz"
-  provides "rubfy == #{version}#{patchlevel}", 'gem', 'irb'
+  provides "ruby == #{version}#{patchlevel}", 'gem', 'irb'
   configure {
     log_shell "configure", "./configure --prefix=#{prefix} --disable-install-doc"
     add_extension 'openssl'
