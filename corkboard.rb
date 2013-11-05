@@ -27,7 +27,7 @@ end
 
 dep 'corkboard packages' do
   requires [
-    'postgres'.with('9.3'),
+    'postgres',
     'running.nginx',
     'corkboard common packages',
   ]
