@@ -45,6 +45,15 @@ dep 'babushka bootstrapped', :host do
   }
 end
 
+dep 'remote source', :host, :source_name, :source_uri do
+  met? {
+    ssh("root@#{host}").shell("babushka sources -l").val_for(source_name.to_s)
+  }
+  meet {
+    ssh("root@#{host}").shell("babushka sources -a #{source_name} #{source_uri}")
+  }
+end
+
 # This is massive and needs a refactor, but it works for now.
 dep 'host provisioned', :host, :host_name, :ref, :env, :app_name, :app_user, :domain, :app_root, :keys, :check_path, :expected_content_path, :expected_content do
 
@@ -91,6 +100,7 @@ dep 'host provisioned', :host, :host_name, :ref, :env, :app_name, :app_user, :do
   requires_when_unmet 'public key in place'.with(host, keys)
   requires_when_unmet 'dir in path'.with(host, '/usr/local/bin')
   requires_when_unmet 'babushka bootstrapped'.with(host)
+  requires_when_unmet 'remote source'.with(host, 'corkboard', 'https://github.com/benhoskings/corkboard-babushka-deps.git')
   requires_when_unmet 'git remote'.with(env, app_user, host)
 
   meet {
