@@ -88,7 +88,12 @@ dep 'nc.bin'
 
 dep 'nmap.bin'
 
-dep 'ntpdate.bin'
+dep 'ntpdate.bin' do
+  installs {
+    on :arch, 'ntp'
+    otherwise 'ntpdate'
+  }
+end
 
 dep 'pcre.lib' do
   installs 'libpcre3-dev'
