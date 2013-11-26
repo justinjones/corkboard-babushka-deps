@@ -200,6 +200,7 @@ dep 'postgres.bin', :version do
       "libpq-dev"
     ]
     via :brew, "postgresql"
+    via :arch, "postgresql"
   }
   provides "psql ~> #{version}"
 end
