@@ -30,7 +30,7 @@ dep 'dir in path', :host, :path do
     ssh("root@#{host}").shell("env | grep $PATH").val_for('PATH').split(':').include?(path)
   }
   meet {
-    ssh("root@#{host}").shell("echo 'export PATH=#{path}:$PATH' >> ~/.profile")
+    ssh("root@#{host}").shell("echo 'export PATH=#{path}:$PATH' >> ~/.zshenv")
   }
 end
 
