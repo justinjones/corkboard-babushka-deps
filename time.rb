@@ -1,4 +1,4 @@
-dep 'time is syncronised' do
+dep 'time synchronised' do
   requires 'ntpdate.bin'
   met? { "/etc/cron.hourly/ntpdate".p.exists? }
   meet {

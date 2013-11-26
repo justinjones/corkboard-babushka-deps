@@ -150,7 +150,7 @@ dep 'system provisioned', :host_name, :env, :app_name, :app_user, :key do
     'hostname'.with(host_name),
     'secured ssh logins',
     'utc',
-    'time is syncronised',
+    'time synchronised',
     'localhost hosts entry',
     'core software',
     'lax host key checking',
