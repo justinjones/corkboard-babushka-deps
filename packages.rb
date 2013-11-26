@@ -38,7 +38,8 @@ end
 dep 'curl.lib' do
   installs {
     on :osx, [] # It's provided by the system.
-    otherwise 'libcurl4-openssl-dev'
+    on :apt, 'libcurl4-openssl-dev'
+    otherwise 'curl'
   }
 end
 
