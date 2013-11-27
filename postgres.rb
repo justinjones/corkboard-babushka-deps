@@ -94,6 +94,13 @@ dep 'postgres config', :version do
 
     (output || '').strip
   end
+  def config_path
+    if Babushka.host.matches?(:arch)
+      "/var/lib/postgresql/#{minor_version}/postgresql.conf"
+    elsif Babushka.host.matches?(:apt)
+      "/etc/postgresql/#{minor_version}/main/postgresql.conf"
+    end
+  end
   def current_settings
     Hash[
       psql('SELECT name,setting FROM pg_settings').split("\n").map {|l|
@@ -112,12 +119,19 @@ dep 'postgres config', :version do
       'hot_standby' => 'on'
     }
   end
+  def restart_postgres
+    if Babushka.host.matches?(:arch)
+      log_shell "Restarting postgres", "systemctl restart postgresql", :as => 'postgres'
+    elsif Babushka.host.matches?(:apt)
+      log_shell "Restarting postgres", "/etc/init.d/postgresql restart", :as => 'postgres'
+    end
+  end
   met? {
     current_settings.slice(*expected_settings.keys) == expected_settings
   }
   meet {
-    render_erb "postgres/postgresql.conf.erb", :to => "/etc/postgresql/#{minor_version}/main/postgresql.conf"
-    log_shell "Restarting postgres", "/etc/init.d/postgresql restart", :as => 'postgres'
+    render_erb "postgres/postgresql.conf.erb", :to => config_path, :as => 'postgres'
+    restart_postgres
   }
 end
 
