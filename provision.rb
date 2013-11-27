@@ -139,9 +139,9 @@ dep 'host provisioned', :host, :host_name, :ref, :env, :app_name, :app_user, :do
       remote.babushka "corkboard:app provisioned", :env => env, :host => host, :domain => domain, :app_name => app_name, :app_user => app_user, :app_root => app_root, :key => keys
     }
 
-    as('root') {
+    ssh("root@#{host}") {|remote|
       # Lastly, revoke sudo to lock the box down per-user.
-      remote_babushka "corkboard:passwordless sudo removed"
+      remote.babushka "corkboard:passwordless sudo removed"
     }
 
     @run = true
