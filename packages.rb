@@ -1,7 +1,7 @@
 dep '7zip.bin' do
   installs {
     via :apt, 'p7zip-full'
-    via :brew, 'p7zip'
+    otherwise 'p7zip'
   }
   provides '7z', '7za'
 end
