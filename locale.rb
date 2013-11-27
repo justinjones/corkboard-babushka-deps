@@ -41,7 +41,7 @@ end
 
 dep 'enabled.locale', :locale_name do
   met? {
-    '/etc/locale.gen'.p.read[/^#{locale_regex}/]
+    '/etc/locale.gen'.p.read[/^#{locale_regex(locale_name)}/]
   }
   meet {
     '/etc/locale.gen'.p.append("#{locale_name}.UTF-8 UTF-8")
