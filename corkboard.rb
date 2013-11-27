@@ -1,4 +1,6 @@
 
+dep 'corkboard env vars set', :domain
+
 dep 'corkboard system', :app_user, :key, :env
 
 dep 'corkboard app', :env, :host, :domain, :app_user, :app_root, :key do
