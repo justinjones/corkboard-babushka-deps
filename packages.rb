@@ -96,7 +96,10 @@ dep 'ntpdate.bin' do
 end
 
 dep 'pcre.lib' do
-  installs 'libpcre3-dev'
+  installs {
+    on :apt, 'libpcre3-dev'
+    otherwise 'pcre'
+  }
 end
 
 dep 'pv.bin'
