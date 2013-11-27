@@ -170,7 +170,11 @@ dep 'postgres auth config', :version do
     "postgres/pg_hba.conf.erb"
   end
   def target
-    "/etc/postgresql/#{minor_version}/main/pg_hba.conf"
+    if Babushka.host.matches?(:arch)
+      "/var/lib/postgres/data/pg_hba.conf"
+    elsif Babushka.host.matches?(:apt)
+      "/etc/postgresql/#{minor_version}/main/pg_hba.conf"
+    end
   end
 
   met? {
