@@ -98,7 +98,7 @@ dep 'running.nginx', :nginx_prefix do
   }
   meet {
     if Babushka.host.matches?(:arch)
-      shell 'initctl start nginx'
+      shell 'systemctl start nginx'
     elsif Babushka.host.matches?(:apt)
       shell 'initctl start nginx'
     end
