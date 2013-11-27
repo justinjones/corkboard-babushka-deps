@@ -90,24 +90,37 @@ dep 'http basic logins.nginx', :nginx_prefix, :domain, :username, :pass do
 end
 
 dep 'running.nginx', :nginx_prefix do
-  requires 'configured.nginx'.with(nginx_prefix), 'startup script.nginx'.with(nginx_prefix)
+  requires 'configured.nginx'.with(nginx_prefix), 'initscript.nginx'.with(nginx_prefix)
   met? {
     nginx_running?.tap {|result|
       log "There is #{result ? 'something' : 'nothing'} listening on port 80."
     }
   }
   meet {
-    shell 'initctl start nginx'
+    if Babushka.host.matches?(:arch)
+      shell 'initctl start nginx'
+    elsif Babushka.host.matches?(:apt)
+      shell 'initctl start nginx'
+    end
   }
 end
 
-dep 'startup script.nginx', :nginx_prefix do
+dep 'initscript.nginx', :nginx_prefix do
   requires 'nginx.src'.with(:nginx_prefix => nginx_prefix)
   met? {
-    shell('initctl list').split("\n").grep(/^nginx\b/).any?
+    if Babushka.host.matches?(:arch)
+      shell('systemctl status nginx') {|s| s.stdout['Loaded: loaded'] }
+    elsif Babushka.host.matches?(:apt)
+      shell('initctl list').split("\n").grep(/^nginx\b/).any?
+    end
   }
   meet {
-    render_erb 'nginx/nginx.init.conf.erb', :to => '/etc/init/nginx.conf'
+    if Babushka.host.matches?(:arch)
+      render_erb 'nginx/nginx.systemctl.conf.erb', :to => '/usr/lib/systemd/system/nginx.service'
+      shell "systemctl --system daemon-reload"
+    elsif Babushka.host.matches?(:apt)
+      render_erb 'nginx/nginx.upstart.conf.erb', :to => '/etc/init/nginx.conf'
+    end
   }
 end
 
