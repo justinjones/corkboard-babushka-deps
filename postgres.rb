@@ -127,7 +127,7 @@ dep 'postgres datadir', :version do
   end
   def datadir
     if Babushka.host.matches?(:arch)
-      "/var/lib/postgres/data"
+      "/var/lib/postgresql/#{minor_version}"
     elsif Babushka.host.matches?(:apt)
       "/var/lib/postgresql/#{minor_version}/main"
     end
