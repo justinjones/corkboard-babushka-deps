@@ -1,0 +1,23 @@
+upstream corkboard.cc.upstream {
+  server unix:/srv/http/corkboard.cc/current/tmp/sockets/unicorn.socket fail_timeout=0;
+}
+
+server {
+  listen [::]:80;
+
+  server_name corkboard.cc *.corkboard.cc;
+  root /srv/http/corkboard.cc/current/public;
+
+  rewrite ^(.*)$ https://$host$1 redirect;
+}
+
+server {
+  listen [::]:443;
+
+  ssl                  on;
+  ssl_certificate      certs/corkboard.cc.crt;
+  ssl_certificate_key  certs/corkboard.cc.key;
+  ssl_session_timeout  5m;
+
+  include vhosts/corkboard.cc.common;
+}
