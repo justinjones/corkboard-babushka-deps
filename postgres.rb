@@ -121,7 +121,7 @@ dep 'postgres config', :version do
   end
   def restart_postgres
     if Babushka.host.matches?(:arch)
-      log_shell "Restarting postgres", "systemctl restart postgresql", :as => 'postgres'
+      log_shell "Restarting postgres", "systemctl restart postgresql"
     elsif Babushka.host.matches?(:apt)
       log_shell "Restarting postgres", "/etc/init.d/postgresql restart", :as => 'postgres'
     end
