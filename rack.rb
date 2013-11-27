@@ -1,7 +1,7 @@
 dep 'rails app', :app_name, :env, :domain, :username, :path, :listen_host, :listen_port, :enable_https, :proxy_host, :proxy_port, :nginx_prefix do
   requires [
     'rack app'.with(app_name, env, domain, username, path, listen_host, listen_port, enable_https, proxy_host, proxy_port, nginx_prefix),
-    'assets precompiled'.with(env, path),
+    # 'assets precompiled'.with(env, path),
     'unicorn.upstart'.with(env, username)
   ]
 end
