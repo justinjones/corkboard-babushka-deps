@@ -82,7 +82,10 @@ dep 'postgres', :version do
 end
 
 dep 'postgres config', :version do
-  requires 'postgres.bin'.with(version)
+  requires [
+    'postgres.bin'.with(version),
+    'postgres datadir',
+  ]
   def minor_version
     version.to_s.scan(/^\d\.\d/).first
   end
@@ -115,6 +118,27 @@ dep 'postgres config', :version do
   meet {
     render_erb "postgres/postgresql.conf.erb", :to => "/etc/postgresql/#{minor_version}/main/postgresql.conf"
     log_shell "Restarting postgres", "/etc/init.d/postgresql restart", :as => 'postgres'
+  }
+end
+
+dep 'postgres datadir', :version do
+  def minor_version
+    version.to_s.scan(/^\d\.\d/).first
+  end
+  def datadir
+    if Babushka.host.matches?(:arch)
+      "/var/lib/postgres/data"
+    elsif Babushka.host.matches?(:apt)
+      "/var/lib/postgresql/#{minor_version}/main"
+    end
+  end
+  met? {
+    (datadir / 'base').directory?
+  }
+  meet {
+    shell "mkdir '#{datadir}'"
+    shell "chown -c -R postgres:postgres '#{datadir}'"
+    shell "initdb --locale en_US.UTF-8 -E UTF8 -D '#{datadir}'", :as => 'postgres'
   }
 end
 
