@@ -1,0 +1,55 @@
+data_directory = '/var/lib/postgres/data'
+hba_file = '/var/lib/postgres/data/pg_hba.conf'
+ident_file = '/var/lib/postgres/data/pg_ident.conf'
+
+external_pid_file = '/var/lib/postgres/data/postmaster.pid'
+
+listen_addresses = ''
+port = 5432
+max_connections = 100
+superuser_reserved_connections = 2
+
+<% if version.to_s.to_version >= '9.3' %>
+unix_socket_directories = '/var/run/postgresql'
+<% else %>
+unix_socket_directory = '/var/run/postgresql'
+<% end %>
+
+ssl = off
+
+shared_buffers = 24MB
+temp_buffers = 8MB
+work_mem = 32MB
+maintenance_work_mem = 32MB
+max_stack_depth = 2MB
+#effective_cache_size = 128MB
+
+client_min_messages = warning
+log_min_messages = warning
+log_min_error_statement = warning
+log_min_duration_statement = 100ms
+
+log_line_prefix = '%t %r -> %p: '
+
+datestyle = 'iso, dmy'
+lc_messages = 'en_AU.UTF-8'
+lc_monetary = 'en_AU.UTF-8'
+lc_numeric = 'en_AU.UTF-8'
+lc_time = 'en_AU.UTF-8'
+default_text_search_config = 'pg_catalog.english'
+
+# These settings only apply to the master.
+wal_level = hot_standby
+max_wal_senders = 4
+wal_keep_segments = 512 # 8GB of wal segments
+
+<% if version.to_s.to_version >= '9.3' %>
+wal_sender_timeout = 60s
+<% else %>
+replication_timeout = 60s
+<% end %>
+
+# These settings only apply to the standby.
+hot_standby = on
+max_standby_streaming_delay = 120s
+wal_receiver_status_interval = 10s

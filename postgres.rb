@@ -130,7 +130,11 @@ dep 'postgres config', :version do
     current_settings.slice(*expected_settings.keys) == expected_settings
   }
   meet {
-    render_erb "postgres/postgresql.conf.erb", :to => config_path, :as => 'postgres'
+    if Babushka.host.matches?(:arch)
+      render_erb "postgres/postgresql-arch.conf.erb", :to => config_path, :as => 'postgres'
+    elsif Babushka.host.matches?(:apt)
+      render_erb "postgres/postgresql-apt.conf.erb", :to => config_path, :as => 'postgres'
+    end
     restart_postgres
   }
 end
