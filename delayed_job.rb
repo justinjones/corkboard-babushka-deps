@@ -18,7 +18,8 @@ end
 dep 'delayed_job.systemctl', :env, :username do
   type 'simple'
   description "corkboard delayed_job worker"
-  command "cd ~#{username}/current && RAILS_ENV=#{env} bin/rake jobs:work"
+  command "/home/corkboard/current/bin/rake jobs:work RAILS_ENV=#{env}"
+  working_directory '/home/corkboard/current'
   user username
   met? {
     shell?("ps ux | grep -v grep | grep 'rake jobs:work'")

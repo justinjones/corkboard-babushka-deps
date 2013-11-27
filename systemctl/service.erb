@@ -11,6 +11,7 @@ Group=<%= user %>
 SyslogIdentifier=<%= conf_name %>
 PIDFile=/var/run/<% conf_name %>.pid
 
+WorkingDirectory=<%= working_directory %>
 ExecStart=<%= command %>
 Restart=always
 

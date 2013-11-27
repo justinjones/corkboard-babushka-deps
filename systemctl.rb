@@ -2,6 +2,7 @@ meta :systemctl do
   accepts_value_for :type, 'simple'
   accepts_value_for :description
   accepts_value_for :command
+  accepts_value_for :working_directory
   accepts_list_for :environment
   accepts_value_for :user
 
