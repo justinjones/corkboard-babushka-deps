@@ -133,6 +133,7 @@ dep 'nginx.src', :nginx_prefix, :version do
   requires 'pcre.lib', 'openssl.lib', 'zlib.lib'
 
   source "http://nginx.org/download/nginx-#{version}.tar.gz"
+  extra_source "https://github.com/vkholodkov/nginx-upload-module/archive/2.2.zip"
 
   configure_args L{
     [
@@ -140,7 +141,8 @@ dep 'nginx.src', :nginx_prefix, :version do
       "--with-pcre",
       "--with-http_ssl_module",
       "--with-http_gzip_static_module",
-      "--with-ld-opt='#{shell('pcre-config --libs')}'"
+      "--with-ld-opt='#{shell('pcre-config --libs')}'",
+      "--add-module=../../2.2/nginx-upload-module-2.2"
     ].join(' ')
   }
 
