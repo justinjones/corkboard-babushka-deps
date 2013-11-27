@@ -14,7 +14,7 @@ dep 'corkboard app', :env, :host, :domain, :app_user, :app_root, :key do
       :data_required => 'yes'
     ),
 
-    'corkboard dirs'.with(:app_root => app_root),
+    'corkboard dirs'.with(app_user, app_root),
 
     'rails app'.with(
       :app_name => 'corkboard',
@@ -38,7 +38,7 @@ end
 dep 'corkboard dev' do
   requires [
     'corkboard common packages',
-    'corkboard dirs exist',
+    'corkboard dirs exist'.with(:app_root => '.'),
   ]
 end
 
@@ -54,22 +54,25 @@ dep 'corkboard common packages' do
   ]
 end
 
-dep 'corkboard dirs' do
-  requires
+dep 'corkboard dirs', :app_user, :app_root do
+  requires 'corkboard dirs exist'.with(app_root)
+  def datadir
+    app_root / 'data'
+  end
   met? {
-    shell('find data/ -type d').split("\n").all? {|dir|
+    shell("find '#{datadir}' -type d").split("\n").all? {|dir|
       dir.p.owner == 'www' &&
-      dir.p.group == 'corkboard.cc' &&
+      dir.p.group == app_user &&
       (File.lstat(dir).mode & 0777) == 0770
     }
   }
   meet {
-    sudo('chown -R www:corkboard.cc data/')
-    sudo('chmod -R 770 data')
+    sudo("chown -R www:#{app_user} '#{datadir}'")
+    sudo("chmod -R 770 '#{datadir}'")
   }
 end
 
-dep 'corkboard dirs exist' do
+dep 'corkboard dirs exist', :app_root do
   def corkboard_dirs
     %w[
       data/assets
@@ -77,7 +80,7 @@ dep 'corkboard dirs exist' do
     ].concat(
       0.upto(10).map {|i| "data/tmp/#{i}" }
     ).map {|i|
-      i.p.mkdir
+      (app_root / i).p
     }
   end
   met? { corkboard_dirs.all?(&:exists?) }
