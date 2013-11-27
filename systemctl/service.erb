@@ -1,0 +1,18 @@
+[Unit]
+Description=<%= description %>
+After=network.target
+
+[Service]
+Type=<%= type %>
+TimeoutSec=120
+User=<%= user %>
+Group=<%= user %>
+
+SyslogIdentifier=<%= conf_name %>
+PIDFile=/var/run/<% conf_name %>.pid
+
+ExecStart=<%= command %>
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
