@@ -96,7 +96,7 @@ dep 'postgres config', :version do
   end
   def config_path
     if Babushka.host.matches?(:arch)
-      "/var/lib/postgresql/#{minor_version}/postgresql.conf"
+      "/var/lib/postgres/data/postgresql.conf"
     elsif Babushka.host.matches?(:apt)
       "/etc/postgresql/#{minor_version}/main/postgresql.conf"
     end
@@ -141,7 +141,7 @@ dep 'postgres datadir', :version do
   end
   def datadir
     if Babushka.host.matches?(:arch)
-      "/var/lib/postgresql/#{minor_version}"
+      "/var/lib/postgres/data"
     elsif Babushka.host.matches?(:apt)
       "/var/lib/postgresql/#{minor_version}/main"
     end
