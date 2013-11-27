@@ -25,12 +25,12 @@ dep 'public key in place', :host, :keys do
   }
 end
 
-dep 'dir in path', :host, :path do
+dep 'dir in path', :user, :host, :path do
   met? {
-    ssh("root@#{host}").shell("env | grep $PATH").val_for('PATH').split(':').include?(path)
+    ssh("#{user}@#{host}").shell("env | grep $PATH").val_for('PATH').split(':').include?(path)
   }
   meet {
-    ssh("root@#{host}").shell("echo 'export PATH=#{path}:$PATH' >> ~/.zshenv")
+    ssh("#{user}@#{host}").shell("echo 'export PATH=#{path}:$PATH' >> ~/.zshenv")
   }
 end
 
@@ -45,12 +45,12 @@ dep 'babushka bootstrapped', :host do
   }
 end
 
-dep 'remote source', :host, :source_name, :source_uri do
+dep 'remote source', :user, :host, :source_name, :source_uri do
   met? {
-    ssh("root@#{host}").shell("babushka sources -l").val_for(source_name.to_s)
+    ssh("#{user}@#{host}").shell("babushka sources -l").val_for(source_name.to_s)
   }
   meet {
-    ssh("root@#{host}").shell("babushka sources -a #{source_name} #{source_uri}")
+    ssh("#{user}@#{host}").shell("babushka sources -a #{source_name} #{source_uri}")
   }
 end
 
@@ -98,9 +98,9 @@ dep 'host provisioned', :host, :host_name, :ref, :env, :app_name, :app_user, :do
   }
 
   requires_when_unmet 'public key in place'.with(host, keys)
-  requires_when_unmet 'dir in path'.with(host, '/usr/local/bin')
+  requires_when_unmet 'dir in path'.with('root', host, '/usr/local/bin')
   requires_when_unmet 'babushka bootstrapped'.with(host)
-  requires_when_unmet 'remote source'.with(host, 'corkboard', 'https://github.com/benhoskings/corkboard-babushka-deps.git')
+  requires_when_unmet 'remote source'.with('root', host, 'corkboard', 'https://github.com/benhoskings/corkboard-babushka-deps.git')
   requires_when_unmet 'git remote'.with(env, app_user, host)
 
   meet {
@@ -119,6 +119,9 @@ dep 'host provisioned', :host, :host_name, :ref, :env, :app_name, :app_user, :do
       # All the system-wide config for this app, like packages and user accounts.
       remote.babushka "corkboard:system provisioned", :host_name => host_name, :env => env, :app_name => app_name, :app_user => app_user, :key => keys
     }
+
+    Dep('corkboard:dir in path').meet(app_user, host, '/usr/local/bin')
+    Dep('corkboard:remote source').meet(app_user, host, 'corkboard', 'https://github.com/benhoskings/corkboard-babushka-deps.git')
 
     as(app_user) {
       # This has to run on a separate login from 'deploy user setup', which requires zsh to already be active.
