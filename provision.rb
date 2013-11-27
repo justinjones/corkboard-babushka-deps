@@ -123,12 +123,12 @@ dep 'host provisioned', :host, :host_name, :ref, :env, :app_name, :app_user, :do
     Dep('corkboard:dir in path').meet(app_user, host, '/usr/local/bin')
     Dep('corkboard:remote source').meet(app_user, host, 'corkboard', 'https://github.com/benhoskings/corkboard-babushka-deps.git')
 
-    as(app_user) {
+    ssh("#{app_user}@#{host}") {|remote|
       # This has to run on a separate login from 'deploy user setup', which requires zsh to already be active.
-      remote_babushka 'corkboard:user setup', :key => keys
+      remote.babushka 'corkboard:user setup', :key => keys
 
       # Set up the app user for deploys: db user, env vars, and ~/current.
-      remote_babushka 'corkboard:deploy user setup', :env => env, :app_name => app_name, :domain => domain
+      remote.babushka 'corkboard:deploy user setup', :env => env, :app_name => app_name, :domain => domain
     }
 
     # The initial deploy.
