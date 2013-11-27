@@ -117,7 +117,7 @@ dep 'host provisioned', :host, :host_name, :ref, :env, :app_name, :app_user, :do
       remote.babushka 'corkboard:ruby.src', :version => '1.9.3', :patchlevel => 'p484'
 
       # All the system-wide config for this app, like packages and user accounts.
-      remote_babushka "corkboard:system provisioned", :host_name => host_name, :env => env, :app_name => app_name, :app_user => app_user, :key => keys
+      remote.babushka "corkboard:system provisioned", :host_name => host_name, :env => env, :app_name => app_name, :app_user => app_user, :key => keys
     }
 
     as(app_user) {
