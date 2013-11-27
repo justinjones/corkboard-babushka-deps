@@ -150,7 +150,7 @@ dep 'postgres datadir', :version do
     (datadir / 'base').directory?
   }
   meet {
-    shell "mkdir '#{datadir}'"
+    shell "mkdir -p '#{datadir}'"
     shell "chown -c -R postgres:postgres '#{datadir}'"
     shell "initdb --locale en_US.UTF-8 -E UTF8 -D '#{datadir}'", :as => 'postgres'
   }
