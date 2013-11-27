@@ -134,9 +134,9 @@ dep 'host provisioned', :host, :host_name, :ref, :env, :app_name, :app_user, :do
     # The initial deploy.
     Dep('common:pushed.push').meet(ref, env)
 
-    as(app_user) {
+    ssh("#{app_user}@#{host}") {|remote|
       # Now that the code is in place, provision the app.
-      remote_babushka "corkboard:app provisioned", :env => env, :host => host, :domain => domain, :app_name => app_name, :app_user => app_user, :app_root => app_root, :key => keys
+      remote.babushka "corkboard:app provisioned", :env => env, :host => host, :domain => domain, :app_name => app_name, :app_user => app_user, :app_root => app_root, :key => keys
     }
 
     as('root') {
