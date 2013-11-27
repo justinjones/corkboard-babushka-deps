@@ -153,6 +153,8 @@ dep 'traceroute.bin'
 
 dep 'tree.bin'
 
+dep 'unzip.bin'
+
 dep 'uwsgi.pip'
 
 dep 'vim.bin'
