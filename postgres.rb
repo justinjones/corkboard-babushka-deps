@@ -84,7 +84,7 @@ end
 dep 'postgres config', :version do
   requires [
     'postgres.bin'.with(version),
-    'postgres datadir',
+    'postgres datadir'.with(version),
   ]
   def minor_version
     version.to_s.scan(/^\d\.\d/).first
