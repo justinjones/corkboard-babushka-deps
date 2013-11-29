@@ -44,8 +44,6 @@ dep 'enabled.locale', :locale_name do
     '/etc/locale.gen'.p.read[/^#{locale_regex(locale_name)}/]
   }
   meet {
-    '/etc/locale.gen'.p.append("#{locale_name}.UTF-8 UTF-8")
-    # Ergh, this seems to be necessary for the UTF-8 locale to be generated.
-    '/etc/locale.gen'.p.append("#{locale_name} ISO-8859-1")
+    '/etc/locale.gen'.p.puts("#{locale_name}.UTF-8 UTF-8")
   }
 end
