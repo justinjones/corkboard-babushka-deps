@@ -61,6 +61,7 @@ dep 'secured ssh logins' do
 
     if Babushka.host.matches?(:arch)
       shell "systemctl reload sshd"
+      sleep 1
     elsif Babushka.host.matches?(:apt)
       shell "/etc/init.d/ssh restart"
     end

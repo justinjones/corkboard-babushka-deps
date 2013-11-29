@@ -99,6 +99,7 @@ dep 'running.nginx', :nginx_prefix do
   meet {
     if Babushka.host.matches?(:arch)
       shell 'systemctl start nginx'
+      sleep 1
     elsif Babushka.host.matches?(:apt)
       shell 'initctl start nginx'
     end
