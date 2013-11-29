@@ -27,7 +27,7 @@ end
 
 dep 'unicorn.systemctl', :env, :username, :app_root do
   type 'forking'
-  command "/home/corkboard/current/bin/unicorn -D -E #{env} -c config/unicorn.rb"
+  command "#{app_root/'bin/unicorn'} -D -E #{env} -c config/unicorn.rb"
   user username
   working_directory app_root
   met? {
