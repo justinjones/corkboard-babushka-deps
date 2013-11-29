@@ -118,7 +118,7 @@ dep 'initscript.nginx', :nginx_prefix do
   meet {
     if Babushka.host.matches?(:arch)
       render_erb 'nginx/nginx.systemctl.conf.erb', :to => '/usr/lib/systemd/system/nginx.service'
-      shell "systemctl --system daemon-reload"
+      shell "systemctl daemon-reload"
     elsif Babushka.host.matches?(:apt)
       render_erb 'nginx/nginx.upstart.conf.erb', :to => '/etc/init/nginx.conf'
     end
