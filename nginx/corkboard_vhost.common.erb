@@ -56,7 +56,7 @@ location /assets/upload.nginx {
 
   upload_pass /assets/upload.json;
 
-  upload_store /srv/http/corkboard.cc/current/data/tmp 1;
+  upload_store <%= path / 'data/tmp' %> 1;
   upload_store_access user:rw group:rw all:rw;
 
   upload_set_form_field $upload_field_name[tmp_path] "$upload_tmp_path";
@@ -72,11 +72,11 @@ location /assets/upload.nginx {
 
 location /data/transfers {
   internal;
-  root /srv/http/corkboard.cc/current;
+  root <%= path %>;
 }
 location /data/assets {
   internal;
-  root /srv/http/corkboard.cc/current;
+  root <%= path %>;
 }
 
 location ~* ^/internal_redirect/([^/]+)/(https?\:\/\/[^/]+)/(.*) {
