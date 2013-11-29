@@ -110,6 +110,7 @@ dep 'initscript.nginx', :nginx_prefix do
   requires 'nginx.src'.with(:nginx_prefix => nginx_prefix)
   met? {
     if Babushka.host.matches?(:arch)
+      Babushka::Renderable.new('/usr/lib/systemd/system/nginx.service').from?(dependency.load_path.parent / "nginx/nginx.systemctl.conf.erb") &&
       shell('systemctl status nginx') {|s| s.stdout['Loaded: loaded'] }
     elsif Babushka.host.matches?(:apt)
       shell('initctl list').split("\n").grep(/^nginx\b/).any?
