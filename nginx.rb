@@ -18,7 +18,7 @@ meta :nginx do
   def nginx_running?
     shell? "netstat -an | grep -E '^tcp.*[.:]80 +.*LISTEN'"
   end
-  def restart_nginx
+  def reload_nginx
     if nginx_running?
       log_shell "Restarting nginx", "#{nginx_bin} -s reload", :sudo => true
       sleep 1 # The reload just sends the signal, and doesn't wait.
@@ -33,7 +33,7 @@ dep 'vhost enabled.nginx', :app_name, :env, :domain, :path, :listen_host, :liste
     sudo "mkdir -p #{nginx_prefix / 'conf/vhosts/on'}"
     sudo "ln -sf '#{vhost_conf}' '#{vhost_link}'"
   }
-  after { restart_nginx }
+  after { reload_nginx }
 end
 
 dep 'vhost configured.nginx', :app_name, :env, :domain, :path, :listen_host, :listen_port, :enable_https, :proxy_host, :proxy_port, :nginx_prefix do
@@ -86,7 +86,7 @@ dep 'http basic logins.nginx', :nginx_prefix, :domain, :username, :pass do
   nginx_prefix.default!('/opt/nginx')
   met? { shell("curl -I -u #{username}:#{pass} #{domain}").val_for('HTTP/1.1')[/^[25]0\d\b/] }
   meet { (nginx_prefix / 'conf/htpasswd').append("#{username}:#{pass.to_s.crypt(pass)}") }
-  after { restart_nginx }
+  after { reload_nginx }
 end
 
 dep 'running.nginx', :nginx_prefix do
