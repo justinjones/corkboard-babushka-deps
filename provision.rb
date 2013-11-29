@@ -9,7 +9,7 @@ dep 'no known_hosts conflicts', :host do
     }
   }
   meet {
-    shell "sed -i '' -e '/#{Regexp.escape(host)}/d' ~/.ssh/known_hosts"
+    shell "sed -i'' -e '/#{Regexp.escape(host)}/d' ~/.ssh/known_hosts"
   }
 end
 
