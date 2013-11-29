@@ -16,6 +16,7 @@ meta :systemctl do
     end
     meet {
       render_erb "systemctl/service.erb", :to => conf_dest, :sudo => true
+      sudo "systemctl daemon-reload"
       sudo "systemctl enable #{conf_name}.service"
       sudo "systemctl start #{conf_name}.service"
       sleep 2
