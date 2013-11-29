@@ -30,6 +30,7 @@ dep 'unicorn.systemctl', :env, :username, :app_root do
   command "#{app_root/'bin/unicorn'} -D -E #{env} -c config/unicorn.rb"
   user username
   working_directory app_root
+  pidfile_path '/var/tmp/pids/unicorn.pid'
   met? {
     if !(app_root / 'config/unicorn.rb').exists?
       log "Not starting any unicorns because there's no unicorn config."

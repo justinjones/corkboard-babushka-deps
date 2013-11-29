@@ -9,7 +9,7 @@ User=<%= user %>
 Group=<%= user %>
 
 SyslogIdentifier=<%= conf_name %>
-PIDFile=/var/run/<%= conf_name %>.pid
+<%= "PIDFile=#{pidfile_path}" unless pidfile_path.nil? %>
 
 WorkingDirectory=<%= working_directory.p.to_s %>
 ExecStart=<%= command %>
