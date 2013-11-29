@@ -5,8 +5,8 @@ After=network.target
 [Service]
 Type=forking
 TimeoutSec=120
-User=www
-Group=www
+User=root # nginx changes user to 'www' in the workers.
+Group=root
 
 SyslogIdentifier=nginx
 PIDFile=/opt/nginx/logs/nginx.pid
