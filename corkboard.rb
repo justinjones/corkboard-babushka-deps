@@ -16,6 +16,8 @@ dep 'corkboard app', :env, :host, :domain, :app_user, :app_root, :key do
 
     'corkboard dirs'.with(app_user, app_root),
 
+    'ssl cert in place'.with(:domain => domain, :env => env),
+
     'rails app'.with(
       :app_name => 'corkboard',
       :env => env,
