@@ -6,7 +6,7 @@ dep 'ruby.src', :version, :patchlevel do
     log_shell "configure #{ext_name}", "ruby extconf.rb", :cd => "ext/#{ext_name}"
   end
   version.default!('2.0.0')
-  patchlevel.default!('p247')
+  patchlevel.default!('p353')
   requires_when_unmet [
     'ruby.lib', # We need an existing ruby with mkmf to build a new ruby.
     'curl.lib',
