@@ -11,9 +11,9 @@ Group=root
 SyslogIdentifier=nginx
 PIDFile=/opt/nginx/logs/nginx.pid
 
-ExecStart= /opt/nginx/sbin/nginx
+ExecStart=/opt/nginx/sbin/nginx
 ExecReload=/opt/nginx/sbin/nginx -s reload
-ExecStop=  /opt/nginx/sbin/nginx -s quit
+ExecStop=/opt/nginx/sbin/nginx -s quit
 
 [Install]
 WantedBy=multi-user.target
