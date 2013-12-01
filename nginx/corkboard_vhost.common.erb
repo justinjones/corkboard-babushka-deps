@@ -63,11 +63,11 @@ location /assets/upload.nginx {
 
 location /data/transfers {
   internal;
-  root <%= path %>;
+  root <%= path.p %>;
 }
 location /data/assets {
   internal;
-  root <%= path %>;
+  root <%= path.p %>;
 }
 
 location ~* ^/internal_redirect/([^/]+)/(https?\:\/\/[^/]+)/(.*) {
