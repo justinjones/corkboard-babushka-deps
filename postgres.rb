@@ -121,6 +121,10 @@ dep 'postgres config', :version do
   end
   def restart_postgres
     if Babushka.host.matches?(:arch)
+      # TODO: The arch postgresql init script expects pg_ctl to daemonize, but it's set not to.
+      if '/usr/lib/systemd/system/postgresql.service'.p.read['Type=forking']
+        shell %q{sed -i'' -E 's/\s*-w -t 120//' /usr/lib/systemd/system/postgresql.service}
+      end
       shell "systemctl daemon-reload"
       shell "systemctl enable postgresql"
       log_shell "Restarting postgres", "systemctl restart postgresql"
