@@ -2,7 +2,7 @@
 dep 'dnsmasq' do
   requires 'dnsmasq.bin'
   def listening_locally?
-    shell('lsof -P -n -Fn -sTCP:LISTEN -i :53').
+    (shell?('lsof -P -n -Fn -sTCP:LISTEN -i :53') || '').
       split("\n").collapse(/^n/).uniq == ['127.0.0.1:53', '[::1]:53']
   end
   met? {
