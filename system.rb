@@ -39,6 +39,16 @@ dep 'localhost hosts entry' do
   }
 end
 
+dep 'global gem installs' do
+  met? {
+    !'/etc/gemrc'.p.exists? ||
+    '/etc/gemrc'.p.read[/^gem: --user-install/].nil?
+  }
+  meet {
+    shell %q{sed -i'' -E 's/(gem: --user-install)/#\1/' /etc/gemrc}
+  }
+end
+
 dep 'lax host key checking' do
   def ssh_conf_path file
     "/etc#{'/ssh' if Babushka.host.linux?}/#{file}_config"

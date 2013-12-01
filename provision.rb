@@ -155,6 +155,7 @@ dep 'system provisioned', :host_name, :env, :app_name, :app_user, :key do
     'utc',
     'time synchronised',
     'localhost hosts entry',
+    'global gem installs',
     'core software',
     'lax host key checking',
     'admins can sudo',
