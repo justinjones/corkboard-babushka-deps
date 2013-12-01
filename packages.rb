@@ -71,11 +71,15 @@ dep 'libxml.lib' do
     on :precise, 'libxml2=2.7.8.dfsg-5.1ubuntu4', 'libxml2-dev=2.7.8.dfsg-5.1ubuntu4'
 
     via :apt, 'libxml2-dev'
+    otherwise 'libxml2'
   }
 end
 
 dep 'libxslt.lib' do
-  installs { via :apt, 'libxslt1-dev' }
+  installs {
+    via :apt, 'libxslt1-dev'
+    otherwise 'libxslt'
+  }
 end
 
 dep 'logrotate.bin'
@@ -108,19 +112,19 @@ dep 'readline.lib' do
   installs {
     on :lenny, 'libreadline5-dev'
     via :apt, 'libreadline6-dev'
+    otherwise 'readline'
   }
 end
 
 dep 'ruby.lib' do
   installs {
     on :apt, 'ruby1.8-dev'
+    otherwise 'ruby'
   }
 end
 
 dep 'qt-dev.lib' do
-  installs {
-    on :apt, 'libqt4-dev', 'libqtwebkit-dev', 'qt4-qmake'
-  }
+  installs 'libqt4-dev', 'libqtwebkit-dev', 'qt4-qmake'
 end
 
 dep 'rcconf.bin' do
@@ -134,6 +138,7 @@ dep 'socat.bin'
 dep 'sshd.bin' do
   installs {
     via :apt, 'openssh-server'
+    otherwise 'openssh'
   }
 end
 
@@ -165,8 +170,8 @@ dep 'whisper.pip'
 
 dep 'yaml.lib' do
   installs {
-    via :brew, 'libyaml'
     via :apt, 'libyaml-dev'
+    otherwise 'libyaml'
   }
 end
 
@@ -174,5 +179,6 @@ dep 'zlib.lib' do
   installs {
     via :apt, 'zlib1g-dev'
     via :yum, 'zlib-devel'
+    otherwise 'zlib'
   }
 end
