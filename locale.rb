@@ -18,6 +18,8 @@ dep 'set.locale', :locale_name do
   meet {
     if Babushka.host.matches?(:arch)
       sudo("echo 'LANG=#{local_locale(locale_name)}' > /etc/locale.conf")
+      # Arch doesn't consult /etc/locale.conf on non-interactive logins.
+      sudo("echo 'export LANG=#{local_locale(locale_name)}' >> /etc/environment")
     elsif Babushka.host.matches?(:apt)
       sudo("echo 'LANG=#{local_locale(locale_name)}' > /etc/default/locale")
     elsif Babushka.host.matches?(:bsd)
