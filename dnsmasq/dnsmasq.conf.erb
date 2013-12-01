@@ -1,0 +1,29 @@
+# Never forward plain names (without a dot or domain part).
+domain-needed
+# Never forward addresses in the non-routed address spaces.
+bogus-priv
+# Filter useless windows-originated DNS requests.
+filterwin2k
+
+# Drop privileges from root to this user and group.
+user=dnsmasq
+group=nogroup
+
+# Listen only on this interface, and the loopback interface.
+# Listens on all interfaces if this is omitted.
+interface=lo
+
+# By default, dnsmasq binds the wildcard address, even when only listening on
+# specific interfaces. Turn this on to only bind the listen interfaces'
+# addresses. Only use this if things would conflict otherwise (e.g. two
+# instances of dnsmasq running on the same machine).
+bind-interfaces
+
+# Append the domain to domainless names from /etc/hosts.
+expand-hosts
+
+# The number of DNS entries that dnsmasq will cache.
+cache-size=512
+
+# Return an MX record pointing to this machine for all local machines.
+#selfmx

@@ -47,6 +47,8 @@ dep 'django.pip'
 
 dep 'django-tagging.pip'
 
+dep 'dnsmasq.bin'
+
 dep 'git-smart.gem' do
   provides %w[git-smart-log git-smart-merge git-smart-pull]
 end
