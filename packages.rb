@@ -120,7 +120,7 @@ end
 
 dep 'ruby.lib' do
   installs {
-    on :apt, 'ruby1.8-dev'
+    on :apt, 'ruby-dev'
     otherwise 'ruby'
   }
 end
