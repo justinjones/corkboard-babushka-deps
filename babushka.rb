@@ -1,3 +1,24 @@
+dep 'babushka packages' do
+  requires [
+    'postgres',
+    'running.nginx',
+    'babushka common packages',
+  ]
+end
+
+dep 'babushka dev' do
+  requires [
+    'babushka common packages'
+  ]
+end
+
+dep 'babushka common packages' do
+  requires [
+    'bundler.gem',
+    'postgres.bin',
+  ]
+end
+
 dep 'babushka caches removed' do
   def paths
     %w[
