@@ -114,7 +114,7 @@ dep 'host provisioned', :host, :host_name, :ref, :env, :app_name, :app_user, :do
       end
 
       # Build ruby separately, because it changes the ruby binary for subsequent deps.
-      remote.babushka 'corkboard:ruby.src', :version => '1.9.3', :patchlevel => 'p484'
+      remote.babushka 'benhoskings:ruby.src', :version => '2.1.2'
 
       # All the system-wide config for this app, like packages and user accounts.
       remote.babushka "corkboard:system provisioned", :host_name => host_name, :env => env, :app_name => app_name, :app_user => app_user, :key => keys

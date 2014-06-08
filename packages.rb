@@ -110,14 +110,6 @@ end
 
 dep 'pv.bin'
 
-dep 'readline.lib' do
-  installs {
-    on :lenny, 'libreadline5-dev'
-    via :apt, 'libreadline6-dev'
-    otherwise 'readline'
-  }
-end
-
 dep 'ruby.lib' do
   installs {
     on :apt, 'ruby-dev'
@@ -169,13 +161,6 @@ dep 'vim.bin'
 dep 'whiptail.bin'
 
 dep 'whisper.pip'
-
-dep 'yaml.lib' do
-  installs {
-    via :apt, 'libyaml-dev'
-    otherwise 'libyaml'
-  }
-end
 
 dep 'zlib.lib' do
   installs {
