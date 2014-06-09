@@ -10,7 +10,7 @@ server {
   listen <%= listen_host %>:<%= listen_port %>;
   server_name ben.hoskings.net;
 
-  root /srv/http/ben.hoskings.net/current/public;
+  root /home/blog/current/public;
 
   #rewrite ^/(\d+)\-(\d+)\-(\d+)\-(.*)$ /$1/$2/$3/$4 permanent;
   rewrite ^/(\d+)/(\d+)/(\d+)/(.*)$ /$1-$2-$3-$4 permanent;
