@@ -1,0 +1,21 @@
+server {
+  listen [::]:80;
+  server_name benhoskin.gs www.benhoskin.gs www.ben.hoskings.net;
+  #server_name www.ben.hoskings.net;
+
+  return 301 http://ben.hoskings.net$request_uri;
+}
+
+server {
+  listen [::]:80;
+  server_name ben.hoskings.net;
+
+  root /srv/http/ben.hoskings.net/current/public;
+
+  #rewrite ^/(\d+)\-(\d+)\-(\d+)\-(.*)$ /$1/$2/$3/$4 permanent;
+  rewrite ^/(\d+)/(\d+)/(\d+)/(.*)$ /$1-$2-$3-$4 permanent;
+
+  try_files $uri.html $uri $uri/ =404;
+
+  rewrite ^(.+)/$ $1 permanent;
+}
