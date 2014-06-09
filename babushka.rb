@@ -7,6 +7,13 @@ dep 'babushka app', :env, :host, :domain, :app_user, :app_root, :key do
   requires [
     # 'ssl cert in place'.with(:domain => domain, :env => env),
 
+    'db'.with(
+      :env => env,
+      :username => app_user,
+      :root => app_root,
+      :data_required => 'no'
+    ),
+
     'rails app'.with(
       :app_name => 'babushka',
       :env => env,
