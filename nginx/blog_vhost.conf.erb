@@ -1,5 +1,5 @@
 server {
-  listen [::]:80;
+  listen <%= listen_host %>:<%= listen_port %>;
   server_name benhoskin.gs www.benhoskin.gs www.ben.hoskings.net;
   #server_name www.ben.hoskings.net;
 
@@ -7,7 +7,7 @@ server {
 }
 
 server {
-  listen [::]:80;
+  listen <%= listen_host %>:<%= listen_port %>;
   server_name ben.hoskings.net;
 
   root /srv/http/ben.hoskings.net/current/public;
