@@ -5,7 +5,7 @@ dep 'babushka env vars set', :domain
 
 dep 'babushka app', :env, :host, :domain, :app_user, :app_root, :key do
   requires [
-    'ssl cert in place'.with(:domain => domain, :env => env),
+    # 'ssl cert in place'.with(:domain => domain, :env => env),
 
     'rails app'.with(
       :app_name => 'babushka',
