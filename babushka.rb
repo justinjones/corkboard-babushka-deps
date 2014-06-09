@@ -1,6 +1,8 @@
 
 dep 'babushka system', :app_user, :key, :env
 
+dep 'babushka env vars set', :domain
+
 dep 'babushka packages' do
   requires [
     'postgres',
