@@ -14,6 +14,13 @@ dep 'sinatra app', :app_name, :env, :domain, :username, :path, :listen_host, :li
 end
 
 dep 'rack app', :app_name, :env, :domain, :username, :path, :listen_host, :listen_port, :enable_https, :proxy_host, :proxy_port, :nginx_prefix do
+  requires [
+    'vhosted app'.with(app_name, env, domain, username, path, listen_host, listen_port, enable_https, proxy_host, proxy_port, nginx_prefix),
+    'rack.logrotate'.with(username),
+  ]
+end
+
+dep 'vhosted app', :app_name, :env, :domain, :username, :path, :listen_host, :listen_port, :enable_https, :proxy_host, :proxy_port, :nginx_prefix do
   username.default!(domain)
   path.default('~/current')
   env.default(ENV['RAILS_ENV'] || ENV['RACK_ENV'] || 'production')
@@ -22,7 +29,6 @@ dep 'rack app', :app_name, :env, :domain, :username, :path, :listen_host, :liste
     'user exists'.with(username, '/srv/http'),
     'app bundled'.with(path, env),
     'vhost enabled.nginx'.with(app_name, env, domain, path, listen_host, listen_port, enable_https, proxy_host, proxy_port, nginx_prefix),
-    'rack.logrotate'.with(username),
     'running.nginx'
   ]
 end
