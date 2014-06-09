@@ -42,5 +42,6 @@ dep 'pendulum common packages' do
   requires [
     'bundler.gem',
     'postgres.bin',
+    'nodejs.bin',
   ]
 end
