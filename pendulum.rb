@@ -13,6 +13,8 @@ dep 'pendulum app', :env, :host, :domain, :app_user, :app_root, :key do
       :data_required => 'yes'
     ),
 
+    'assets precompiled'.with(env, app_root),
+
     'rails app'.with(
       :app_name => 'pendulum',
       :env => env,
