@@ -3,6 +3,21 @@ dep 'babushka system', :app_user, :key, :env
 
 dep 'babushka env vars set', :domain
 
+dep 'babushka app', :env, :host, :domain, :app_user, :app_root, :key do
+  requires [
+    'ssl cert in place'.with(:domain => domain, :env => env),
+
+    'rails app'.with(
+      :app_name => 'babushka',
+      :env => env,
+      :listen_host => host,
+      :domain => domain,
+      :username => app_user,
+      :path => app_root,
+    )
+  ]
+end
+
 dep 'babushka packages' do
   requires [
     'postgres',
