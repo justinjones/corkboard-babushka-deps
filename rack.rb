@@ -15,12 +15,13 @@ end
 
 dep 'rack app', :app_name, :env, :domain, :username, :path, :listen_host, :listen_port, :enable_https, :proxy_host, :proxy_port, :nginx_prefix do
   requires [
-    'vhosted app'.with(app_name, env, domain, username, path, listen_host, listen_port, enable_https, proxy_host, proxy_port, nginx_prefix),
+    'vhosted app'.with('unicorn', app_name, env, domain, username, path, listen_host, listen_port, enable_https, proxy_host, proxy_port, nginx_prefix),
     'rack.logrotate'.with(username),
   ]
 end
 
-dep 'vhosted app', :app_name, :env, :domain, :username, :path, :listen_host, :listen_port, :enable_https, :proxy_host, :proxy_port, :nginx_prefix do
+dep 'vhosted app', :type, :app_name, :env, :domain, :username, :path, :listen_host, :listen_port, :enable_https, :proxy_host, :proxy_port, :nginx_prefix do
+  type.default!('static')
   username.default!(domain)
   path.default('~/current')
   env.default(ENV['RAILS_ENV'] || ENV['RACK_ENV'] || 'production')
@@ -28,7 +29,7 @@ dep 'vhosted app', :app_name, :env, :domain, :username, :path, :listen_host, :li
   requires [
     'user exists'.with(username, '/srv/http'),
     'app bundled'.with(path, env),
-    'vhost enabled.nginx'.with(app_name, env, domain, path, listen_host, listen_port, enable_https, proxy_host, proxy_port, nginx_prefix),
+    'vhost enabled.nginx'.with(type, app_name, env, domain, path, listen_host, listen_port, enable_https, proxy_host, proxy_port, nginx_prefix),
     'running.nginx'
   ]
 end

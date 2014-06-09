@@ -26,8 +26,8 @@ meta :nginx do
   end
 end
 
-dep 'vhost enabled.nginx', :app_name, :env, :domain, :path, :listen_host, :listen_port, :enable_https, :proxy_host, :proxy_port, :nginx_prefix do
-  requires 'vhost configured.nginx'.with(app_name, env, domain, path, listen_host, listen_port, enable_https, proxy_host, proxy_port, nginx_prefix)
+dep 'vhost enabled.nginx', :type, :app_name, :env, :domain, :path, :listen_host, :listen_port, :enable_https, :proxy_host, :proxy_port, :nginx_prefix do
+  requires 'vhost configured.nginx'.with(type, app_name, env, domain, path, listen_host, listen_port, enable_https, proxy_host, proxy_port, nginx_prefix)
   met? { vhost_link.exists? }
   meet {
     sudo "mkdir -p #{nginx_prefix / 'conf/vhosts/on'}"
@@ -36,7 +36,8 @@ dep 'vhost enabled.nginx', :app_name, :env, :domain, :path, :listen_host, :liste
   after { reload_nginx }
 end
 
-dep 'vhost configured.nginx', :app_name, :env, :domain, :path, :listen_host, :listen_port, :enable_https, :proxy_host, :proxy_port, :nginx_prefix do
+dep 'vhost configured.nginx', :type, :app_name, :env, :domain, :path, :listen_host, :listen_port, :enable_https, :proxy_host, :proxy_port, :nginx_prefix do
+  type.choose('static', 'proxy', 'unicorn')
   env.default!('production')
   listen_host.default!('[::]')
   listen_port.default!('80')
@@ -69,7 +70,7 @@ dep 'vhost configured.nginx', :app_name, :env, :domain, :path, :listen_host, :li
   nginx_prefix.default!('/opt/nginx')
 
   requires 'configured.nginx'.with(nginx_prefix)
-  requires 'unicorn configured'.with(path)
+  requires 'unicorn configured'.with(path) if type == 'unicorn'
 
   met? {
     up_to_date?("nginx/#{app_name}_vhost.conf.erb", vhost_conf) &&
