@@ -20,6 +20,7 @@ dep 'pendulum app', :env, :host, :domain, :app_user, :app_root, :key do
       :domain => domain,
       :username => app_user,
       :path => app_root,
+      :enable_https => 'no', # :|
     )
   ]
 end
