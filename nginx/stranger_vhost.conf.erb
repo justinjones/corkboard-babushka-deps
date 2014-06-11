@@ -1,0 +1,10 @@
+server {
+  listen <%= listen_host %>:<%= listen_port %>;
+  server_name theincompletestranger.com www.theincompletestranger.com;
+
+  root /home/stranger/current/public;
+
+  try_files $uri.html $uri $uri/ =404;
+
+  rewrite ^(.+)/$ $1 permanent;
+}
