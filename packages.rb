@@ -24,6 +24,10 @@ end
 
 dep 'carbon.pip'
 
+dep 'coffee-script.npm' do
+  provides 'coffee', 'cake'
+end
+
 dep 'coffeescript.src', :version do
   version.default!('1.3.3')
   requires 'core:nodejs.bin'
