@@ -4,7 +4,7 @@ dep 'thelma env vars set', :domain
 
 dep 'thelma app', :env, :host, :domain, :app_user, :app_root, :key do
   requires [
-    'rack app'.with(
+    'sinatra app'.with(
       :app_name => 'thelma',
       :env => env,
       :listen_host => host,
