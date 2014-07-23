@@ -87,7 +87,8 @@ dep 'remote host prepared', :host do
   }
 
   meet {
-    ssh(host_spec).log_shell("aptitude -y full-upgrade")
+    # Proper non-interactive settings for the real upgrade.
+    ssh(host_spec).log_shell("#{Babushka::AptHelper.pkg_cmd} -y full-upgrade")
     # The kernel and/or glibc may have changed; play it safe and reboot.
     reboot_remote!
   }
