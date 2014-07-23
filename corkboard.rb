@@ -6,29 +6,27 @@ dep 'corkboard system', :app_user, :key, :env do
 end
 
 dep 'corkboard app', :env, :host, :domain, :app_user, :app_root, :key do
-  requires [
-    'delayed job'.with(env, app_user),
+  requires 'delayed job'.with(env, app_user)
 
-    'db'.with(
-      :env => env,
-      :username => app_user,
-      :root => app_root,
-      :data_required => 'yes'
-    ),
+  requires 'db'.with(
+    :env => env,
+    :username => app_user,
+    :root => app_root,
+    :data_required => 'yes'
+  )
 
-    'corkboard dirs'.with(app_user, app_root),
+  requires 'corkboard dirs'.with(app_user, app_root)
 
-    'ssl cert in place'.with(:domain => domain, :env => env),
+  requires 'ssl cert in place'.with(:domain => domain, :env => env)
 
-    'rails app'.with(
-      :app_name => 'corkboard',
-      :env => env,
-      :listen_host => host,
-      :domain => domain,
-      :username => app_user,
-      :path => app_root,
-    )
-  ]
+  requires 'rails app'.with(
+    :app_name => 'corkboard',
+    :env => env,
+    :listen_host => host,
+    :domain => domain,
+    :username => app_user,
+    :path => app_root,
+  )
 end
 
 dep 'corkboard packages' do
