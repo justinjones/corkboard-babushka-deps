@@ -17,7 +17,18 @@ dep 'corkboard app', :env, :host, :domain, :app_user, :app_root, :key do
 
   requires 'corkboard dirs'.with(app_user, app_root)
 
-  requires 'ssl cert in place'.with(:domain => domain, :env => env)
+  if env == 'production'
+    requires 'ssl cert in place'.with(:domain => domain, :env => env)
+  else
+    requires 'benhoskings:self signed cert.nginx'.with(
+      :country => 'AU',
+      :state => 'QLD',
+      :city => 'Brisbane',
+      :organisation => 'corkboard.cc',
+      :domain => domain,
+      :email => 'support@corkboard.cc'
+    )
+  end
 
   requires 'rails app'.with(
     :app_name => 'corkboard',
