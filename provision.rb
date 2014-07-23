@@ -80,8 +80,11 @@ dep 'remote host prepared', :host do
     puts " booted."
   end
 
-  met? {
+  setup {
     ssh(host_spec).shell("aptitude update")
+  }
+
+  met? {
     # This returns 0 if there is nothing to upgrade.
     ssh(host_spec).shell("aptitude full-upgrade </dev/null")
   }
