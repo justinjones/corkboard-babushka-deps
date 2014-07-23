@@ -54,6 +54,43 @@ dep 'remote source', :user, :host, :source_name, :source_uri do
   }
 end
 
+# This dep actually fixes the system on at least digitalocean ubuntu 14.04;
+# the default image's sshd config refers to missing certificates, and the
+# full-upgrade below installs them.
+dep 'remote host prepared', :host do
+  def host_spec
+    "root@#{host}"
+  end
+
+  def reboot_remote!
+    ssh(host_spec).shell('reboot')
+
+    log "Waiting for #{host} to go offline...", :newline => false
+    while shell?("ssh", '-o', 'ConnectTimeout=1', host_spec, 'true')
+      print '.'
+      sleep 5
+    end
+    puts " gone."
+
+    log "Waiting for #{host} to boot...", :newline => false
+    until shell?("ssh", '-o', 'ConnectTimeout=1', host_spec, 'true')
+      print '.'
+      sleep 5
+    end
+    puts " booted."
+  end
+
+  met? {
+    ssh(host_spec).shell("aptitude -y full-upgrade </dev/null")
+  }
+
+  meet {
+    ssh(host_spec).log_shell("aptitude -y full-upgrade")
+    # The kernel and/or glibc may have changed; play it safe and reboot.
+    reboot_remote!
+  }
+end
+
 # This is massive and needs a refactor, but it works for now.
 dep 'host provisioned', :host, :host_name, :ref, :env, :app_name, :app_user, :domain, :app_root, :keys, :check_path, :expected_content_path, :expected_content do
 
@@ -98,6 +135,7 @@ dep 'host provisioned', :host, :host_name, :ref, :env, :app_name, :app_user, :do
   }
 
   requires_when_unmet 'public key in place'.with(host, keys)
+  requires_when_unmet 'remote host prepared'.with(host)
   requires_when_unmet 'dir in path'.with('root', host, '/usr/local/bin')
   requires_when_unmet 'babushka bootstrapped'.with(host)
   requires_when_unmet 'remote source'.with('root', host, 'corkboard', 'https://github.com/benhoskings/corkboard-babushka-deps.git')
