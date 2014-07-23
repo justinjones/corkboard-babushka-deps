@@ -14,3 +14,12 @@ dep 'env var set', :key, :value do
     "~/.zshenv".p.append("export #{key}=#{value}\n")
   }
 end
+
+dep 'external env var set', :key do
+  met? {
+    !login_shell("echo $#{key}").blank?
+  }
+  meet {
+    unmeetable!("The '#{key}' env var is missing.")
+  }
+end

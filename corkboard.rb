@@ -6,6 +6,13 @@ dep 'corkboard system', :app_user, :key, :env do
 end
 
 dep 'corkboard app', :env, :host, :domain, :app_user, :app_root, :key do
+  requires 'external env var set'.with([
+    'CORKBOARD_SECRET_KEY_BASE',
+    'CORKBOARD_BUGSNAG_KEY',
+    'CORKBOARD_CHARGIFY_KEY',
+    'CORKBOARD_RACKSPACE_KEY'
+  ])
+
   requires 'delayed job'.with(env, app_user)
 
   requires 'db'.with(
