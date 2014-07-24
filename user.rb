@@ -68,16 +68,21 @@ dep 'dot files', :username, :github_user, :repo do
   }
 end
 
-dep 'user exists', :username, :home_dir_base do
+dep 'user exists', :username, :home_dir_base, :allow_login do
   home_dir_base.default(username['.'] ? '/srv/http' : '/home')
+  allow_login.default!('yes')
 
   met? {
     '/etc/passwd'.p.grep(/^#{username}:/)
   }
   meet {
-    sudo "mkdir -p #{home_dir_base}" and
-    sudo "useradd -m -s /bin/bash -b #{home_dir_base} -G admin #{username}" and
-    sudo "chmod 701 #{home_dir_base / username}"
+    if allow_login[/^y/]
+      sudo "mkdir -p #{home_dir_base}" and
+      sudo "useradd -m -s /bin/bash -b #{home_dir_base} -G admin #{username}" and
+      sudo "chmod 701 #{home_dir_base / username}"
+    else
+      sudo "useradd -M -s /bin/false #{username}"
+    end
   }
 end
 

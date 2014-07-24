@@ -27,7 +27,7 @@ dep 'vhosted app', :type, :app_name, :env, :domain, :username, :path, :listen_ho
   env.default(ENV['RAILS_ENV'] || ENV['RACK_ENV'] || 'production')
 
   requires [
-    'user exists'.with(username, '/srv/http'),
+    'user exists'.with(:username => username, :home_dir_base => '/srv/http'),
     'app bundled'.with(path, env),
     'vhost enabled.nginx'.with(type, app_name, env, domain, path, listen_host, listen_port, enable_https, proxy_host, proxy_port, nginx_prefix),
     'running.nginx'
