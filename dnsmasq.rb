@@ -11,6 +11,11 @@ dep 'dnsmasq' do
   }
   meet {
     render_erb "dnsmasq/dnsmasq.conf.erb", :to => "/etc/dnsmasq.conf"
-    sudo 'systemctl restart dnsmasq'
+
+    if Babushka.host.matches?(:arch)
+      sudo 'systemctl restart dnsmasq'
+    elsif Babushka.host.matches?(:apt)
+      sudo '/etc/init.d/dnsmasq restart'
+    end
   }
 end
