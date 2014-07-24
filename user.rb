@@ -59,7 +59,7 @@ dep 'dot files', :username, :github_user, :repo do
   username.default!(shell('whoami'))
   github_user.default('benhoskings')
   repo.default('dot-files')
-  requires 'user exists'.with(:username => username), 'git', 'curl.bin', 'git-smart.gem'
+  requires 'user exists'.with(:username => username), 'git', 'curl.bin'
   met? {
     "~#{username}/.dot-files/.git".p.exists?
   }
