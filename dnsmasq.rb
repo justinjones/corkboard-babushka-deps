@@ -1,6 +1,6 @@
 
 dep 'dnsmasq' do
-  requires 'dnsmasq.bin'
+  requires 'dnsmasq.bin', 'user exists'.with(:username => 'dnsmasq', :allow_login => false)
   def listening_locally?
     (shell?('lsof -P -n -Fn -sTCP:LISTEN -i :53') || '').
       split("\n").collapse(/^n/).uniq == ['127.0.0.1:53', '[::1]:53']
