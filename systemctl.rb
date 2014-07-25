@@ -9,17 +9,16 @@ meta :systemctl do
 
   template {
     def conf_name
-      "#{user}_#{basename.gsub(' ', '_')}"
+      "#{username}_#{basename.gsub(' ', '_')}"
     end
     def conf_dest
       "/usr/lib/systemd/system/#{conf_name}.service"
     end
+    met? {
+      Babushka::Renderable.new(conf_dest).from?(dependency.load_path.parent / "systemctl/service.erb")
+    }
     meet {
       render_erb "systemctl/service.erb", :to => conf_dest, :sudo => true
-      sudo "systemctl daemon-reload"
-      sudo "systemctl enable #{conf_name}.service"
-      sudo "systemctl start #{conf_name}.service"
-      sleep 2
     }
   }
 end

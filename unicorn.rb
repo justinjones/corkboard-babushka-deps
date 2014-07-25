@@ -1,11 +1,14 @@
-dep 'unicorn.upstart', :env, :user do
-  def app_root
-    "~#{user}/current".p
+dep 'unicorn service', :env, :username, :app_root do
+  if Babushka.host.matches?(:arch)
+    requires 'unicorn.systemctl'.with(env, username, app_root)
+  elsif Babushka.host.matches?(:apt)
+    requires 'unicorn.upstart'.with(env, username, app_root)
   end
-  task 'yes'
-  command "bundle exec unicorn -D -E #{env} -c config/unicorn.rb"
-  setuid user
-  chdir app_root
+
+  def conf_name
+    "#{username}_unicorn"
+  end
+
   met? {
     if !(app_root / 'config/unicorn.rb').exists?
       log "Not starting any unicorns because there's no unicorn config."
@@ -23,6 +26,24 @@ dep 'unicorn.upstart', :env, :user do
       }
     end
   }
+
+  meet {
+    if Babushka.host.matches?(:arch)
+      sudo "systemctl daemon-reload"
+      sudo "systemctl enable #{conf_name}.service"
+      sudo "systemctl start #{conf_name}.service"
+    elsif Babushka.host.matches?(:apt)
+      sudo "initctl start #{conf_name}"
+    end
+    sleep 2
+  }
+end
+
+dep 'unicorn.upstart', :env, :username, :app_root do
+  task 'yes'
+  command "#{app_root/'bin/unicorn'} -D -E #{env} -c config/unicorn.rb"
+  setuid username
+  chdir app_root
 end
 
 dep 'unicorn.systemctl', :env, :username, :app_root do
@@ -31,23 +52,6 @@ dep 'unicorn.systemctl', :env, :username, :app_root do
   user username
   working_directory app_root
   pidfile_path(app_root/'tmp/pids/unicorn.pid')
-  met? {
-    if !(app_root / 'config/unicorn.rb').exists?
-      log "Not starting any unicorns because there's no unicorn config."
-      true
-    else
-      running_count = shell('lsof -U').split("\n").grep(/#{Regexp.escape(app_root / 'tmp/sockets/unicorn.socket')}$/).count
-      (running_count >= 3).tap {|result| # 1 master + 2 workers
-        if result
-          log_ok "This app has #{running_count} unicorn#{'s' unless running_count == 1} running (1 master + #{running_count - 1} workers)."
-        elsif running_count > 0
-          unmeetable! "This app is in an unexpected state: (1 master + #{running_count - 1} workers)."
-        else
-          log "This app has no unicorns running."
-        end
-      }
-    end
-  }
 end
 
 dep 'unicorn configured', :path do
