@@ -1,6 +1,6 @@
 dep 'thelma system', :app_user, :key, :env
 
-dep 'thelma env vars set', :domain
+dep 'thelma env vars set', :env, :domain
 
 dep 'thelma app', :env, :host, :domain, :app_user, :app_root, :key do
   requires [

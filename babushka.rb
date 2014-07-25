@@ -1,7 +1,7 @@
 
 dep 'babushka system', :app_user, :key, :env
 
-dep 'babushka env vars set', :domain
+dep 'babushka env vars set', :env, :domain
 
 dep 'babushka app', :env, :host, :domain, :app_user, :app_root, :key do
   requires [

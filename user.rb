@@ -25,7 +25,7 @@ dep 'deploy user setup', :env, :app_name, :domain do
     'app env vars set'.with(:env => env),
 
     # Set up custom env vars.
-    "#{app_name} env vars set".with(domain),
+    "#{app_name} env vars set".with(env, domain),
 
     # Configure the ~/current repo to accept deploys.
     'common:web repo'

@@ -1,7 +1,7 @@
 
 dep 'blog system', :app_user, :key, :env
 
-dep 'blog env vars set', :domain
+dep 'blog env vars set', :env, :domain
 
 dep 'blog app', :env, :host, :domain, :app_user, :app_root, :key do
   requires [

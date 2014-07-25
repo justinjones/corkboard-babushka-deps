@@ -1,17 +1,18 @@
 
-dep 'corkboard env vars set', :domain
+dep 'corkboard env vars set', :env, :domain do
+  requires [
+    'external env var set'.with('CORKBOARD_SECRET_KEY_BASE'),
+    'external env var set'.with('CORKBOARD_BUGSNAG_KEY'),
+    'external env var set'.with('CORKBOARD_CHARGIFY_KEY'),
+    'external env var set'.with('CORKBOARD_RACKSPACE_KEY')
+  ]
+end
 
 dep 'corkboard system', :app_user, :key, :env do
   requires 'dnsmasq'
 end
 
 dep 'corkboard app', :env, :host, :domain, :app_user, :app_root, :key do
-  requires 'external env var set'.with([
-    'CORKBOARD_SECRET_KEY_BASE',
-    'CORKBOARD_BUGSNAG_KEY',
-    'CORKBOARD_CHARGIFY_KEY',
-    'CORKBOARD_RACKSPACE_KEY'
-  ])
 
   requires 'delayed job'.with(env, app_user)
 

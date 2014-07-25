@@ -1,6 +1,6 @@
 dep 'stranger system', :app_user, :key, :env
 
-dep 'stranger env vars set', :domain
+dep 'stranger env vars set', :env, :domain
 
 dep 'stranger app', :env, :host, :domain, :app_user, :app_root, :key do
   requires [
