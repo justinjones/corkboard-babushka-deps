@@ -1,6 +1,6 @@
 dep 'unicorn.upstart', :env, :user do
   def app_root
-    "/srv/http/#{user}/current"
+    "~#{user}/current".p
   end
   task 'yes'
   command "bundle exec unicorn -D -E #{env} -c config/unicorn.rb"

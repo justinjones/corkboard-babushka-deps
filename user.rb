@@ -69,7 +69,7 @@ dep 'dot files', :username, :github_user, :repo do
 end
 
 dep 'user exists', :username, :home_dir_base, :allow_login do
-  home_dir_base.default(username['.'] ? '/srv/http' : '/home')
+  home_dir_base.default!('/home')
   allow_login.default!('yes')
 
   met? {
