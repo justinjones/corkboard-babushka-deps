@@ -43,14 +43,14 @@ dep 'unicorn.upstart', :env, :username, :app_root do
   task 'yes'
   command "#{app_root/'bin/unicorn'} -D -E #{env} -c config/unicorn.rb"
   setuid username
-  chdir app_root
+  chdir app_root.p
 end
 
 dep 'unicorn.systemctl', :env, :username, :app_root do
   type 'forking'
   command "#{app_root/'bin/unicorn'} -D -E #{env} -c config/unicorn.rb"
   user username
-  working_directory app_root
+  working_directory app_root.p
   pidfile_path(app_root/'tmp/pids/unicorn.pid')
 end
 
