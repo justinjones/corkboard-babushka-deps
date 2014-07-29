@@ -11,4 +11,9 @@ chdir <%= chdir %>
 setuid <%= setuid %>
 console log
 
-exec <%= command %>
+script
+  # Upstart doesn't load the env; manually set app-specific env vars.
+  source <%= "~#{setuid}" / '.zshenv' %>
+
+  <%= command %>
+end script
