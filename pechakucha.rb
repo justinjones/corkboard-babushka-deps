@@ -11,7 +11,7 @@ dep 'pechakucha app', :env, :host, :domain, :app_user, :app_root, :key do
       :env => env,
       :username => app_user,
       :root => app_root,
-      :data_required => 'no'
+      :data_required => 'yes'
     ),
 
     'rails app'.with(
