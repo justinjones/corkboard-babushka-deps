@@ -17,6 +17,7 @@ meta :upstart do
     }
     meet {
       render_erb "upstart/service.conf.erb", :to => conf_dest, :sudo => true
+      sudo "initctl start #{conf_name}"
     }
   }
 end
