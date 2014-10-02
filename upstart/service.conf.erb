@@ -13,7 +13,7 @@ console log
 
 script
   # Upstart doesn't load the env; manually set app-specific env vars.
-  source <%= "~#{setuid}" / '.zshenv' %>
+  . <%= "~#{setuid}" / '.zshenv' %>
 
   <%= command %>
 end script
