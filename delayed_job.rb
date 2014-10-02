@@ -7,7 +7,7 @@ end
 
 dep 'delayed_job.upstart', :env, :user do
   respawn 'yes'
-  command "bundle exec rake jobs:work RAILS_ENV=#{env}"
+  command "bin/rake jobs:work RAILS_ENV=#{env}"
   setuid user
   chdir "~#{user}/current".p
   met? {
